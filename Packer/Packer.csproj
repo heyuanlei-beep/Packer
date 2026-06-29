@@ -25,7 +25,7 @@
 
     <MSBuild Projects="..\RuntimeStub\RuntimeStub.csproj"
              Targets="Publish"
-             Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishAot=true" />
+             Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishAot=true;PublishProfile=" />
 
     <Copy SourceFiles="$(RuntimeStubExePath)"
           DestinationFiles="$(RuntimeStubResourcePath)"
