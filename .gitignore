@@ -36,6 +36,9 @@ Packer/RuntimeStub.exe
 # Test output
 EFB_AIP_BAG.exe
 
+# Design documents (kept locally, not tracked)
+*.docx
+
 # WorkBuddy project data
 .workbuddy/
 
