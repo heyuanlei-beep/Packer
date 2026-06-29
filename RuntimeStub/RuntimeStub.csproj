@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- 设置为 WinExe 可以隐藏黑色的控制台窗口，实现完全无感启动 -->
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!--
+      Native AOT 编译：生成完全独立的原生 EXE，无任何 .NET 运行时依赖。
+      要求：VS "C++ 桌面开发" 工作负载 + Windows SDK。
+      当前环境已安装 VS 18 Enterprise (MSVC 14.50) + Windows SDK 10.0.26100.0。
+    -->
+    <PublishAot>true</PublishAot>
+    <TrimMode>full</TrimMode>
+    <InvariantGlobalization>true</InvariantGlobalization>
+
+    <!-- 明确声明仅支持 Windows，消除 CA1416 警告 -->
+    <SupportedOSPlatform>windows</SupportedOSPlatform>
+    <NoWarn>CA1416</NoWarn>
+  </PropertyGroup>
+
+  <!--
+    Native AOT 需要 Microsoft.Win32.Registry 的 AOT 兼容包。
+    .NET 10 的 runtime pack 已内置，无需额外 NuGet 引用。
+  -->
+
+</Project>

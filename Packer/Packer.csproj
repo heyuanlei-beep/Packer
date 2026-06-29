@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Packer</AssemblyName>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <!--
+    在 Packer 编译前，先以 Native AOT 发布 RuntimeStub，并将原生 EXE 复制到本项目目录，
+    作为内嵌资源嵌入 Packer。Native AOT 生成完全独立的原生代码，无任何 .NET 运行时依赖。
+    
+    注意：这里不使用 ProjectReference，避免 AOT 发布与 WinForms 项目的冲突。
+  -->
+  <Target Name="PrepareRuntimeStubResource" BeforeTargets="BeforeCompile">
+    <PropertyGroup>
+      <RuntimeStubExePath>..\RuntimeStub\bin\$(Configuration)\net10.0\win-x64\publish\RuntimeStub.exe</RuntimeStubExePath>
+      <RuntimeStubResourcePath>$(MSBuildProjectDirectory)\RuntimeStub.exe</RuntimeStubResourcePath>
+    </PropertyGroup>
+
+    <MSBuild Projects="..\RuntimeStub\RuntimeStub.csproj"
+             Targets="Publish"
+             Properties="Configuration=$(Configuration);RuntimeIdentifier=win-x64;SelfContained=true;PublishAot=true" />
+
+    <Copy SourceFiles="$(RuntimeStubExePath)"
+          DestinationFiles="$(RuntimeStubResourcePath)"
+          SkipUnchangedFiles="true" />
+  </Target>
+
+  <ItemGroup>
+    <!-- 静态声明内嵌资源：文件会在 PrepareRuntimeStubResource 目标中提前生成 -->
+    <EmbeddedResource Include="RuntimeStub.exe" Visible="false">
+      <LogicalName>RuntimeStub.exe</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>
